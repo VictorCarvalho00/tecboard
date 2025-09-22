@@ -6,9 +6,22 @@ import { TituloFormulario } from "../TituloFormulario";
 import { Botao } from '../Botao';
 import { ListaSuspensa } from '../ListaSuspensa';
 
-export function FormularioDeEvento() {
+export function FormularioDeEvento({ temas, aoSubmeter }) {
+
+    function aoFormularioSubmetido(formData) {
+        const evento = {
+            capa: formData.get('capa'),
+            tema: temas.find(function (item) {
+                return item.id == formData.get('tema')
+            }),
+            data: new Date(formData.get('dataEvento')),
+            titulo: formData.get('nomeEvento')
+        }
+        aoSubmeter(evento)
+    }
+
     return (
-        <form className="form-evento">
+        <form className="form-evento" action={aoFormularioSubmetido}>
             <TituloFormulario>
                 Preencha para criar um evento:
             </TituloFormulario>
@@ -25,6 +38,18 @@ export function FormularioDeEvento() {
                     />
                 </CampoDeFormulario>
                 <CampoDeFormulario>
+                    <Label htmlForm="capa">
+                        Qual o endereço da imagem da capa?
+                    </Label>
+                    <CampoDeEntrada
+                        type="text"
+                        id="capa"
+                        placeholder="http://..."
+                        name="capa"
+                    />
+                </CampoDeFormulario>
+
+                <CampoDeFormulario>
                     <Label htmlForm="dataEvento">
                         Data do evento
                     </Label>
@@ -38,7 +63,7 @@ export function FormularioDeEvento() {
                     <Label htmlForm="temaEvento">
                         Tema do evento
                     </Label>
-                    <ListaSuspensa />
+                    <ListaSuspensa id="tema" name="tema" itens={temas} />
                 </CampoDeFormulario>
             </div>
             <div className='acoes'>
